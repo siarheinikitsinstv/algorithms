@@ -11,25 +11,21 @@ const getMaxSum = (data) => {
     return 0;
   }
 
-  let result = Number.NEGATIVE_INFINITY;
+  let prevSums = data[0];
 
-  const dfs = (i, j, sum) => {
-    if (i === data.length) {
-      result = Math.max(result, sum);
-      return;
-    }
-
+  for(let i = 1; i < data.length; i++) {
     const curLevel = data[i];
+    const newSums = Array(curLevel.length).fill(Number.NEGATIVE_INFINITY);
 
-    for (let k = 0; k < curLevel.length; k++) {
-      dfs(i + 1, j, sum + data[i][j]);
-      dfs(i + 1, j + 1, sum + data[i][j]);
+    for(let j = 0; j < prevSums.length; j++) {
+      newSums[j] = Math.max(newSums[j], prevSums[j] + curLevel[j]);
+      newSums[j + 1] = Math.max(newSums[j + 1], prevSums[j] + curLevel[j + 1]);
     }
-  };
 
-  dfs(0, 0, 0);
+    prevSums = newSums;
+  }
 
-  return result;
+  return Math.max(...prevSums);
 };
 
 console.log(getMaxSum([]));
